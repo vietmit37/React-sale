@@ -18,7 +18,6 @@ const testSlice = createSlice({
       .addCase(getFetchTest.fulfilled, (state, action) => {
         state.status = "idle";
         state.test = action.payload;
-        console.log(action.payload);
       });
     // .addCase(getFetchTest.rejected, (state, action) => {
     //   state.status = false;

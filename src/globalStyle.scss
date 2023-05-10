@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Cabin", sans-serif;
+}
+:root{
+  --color1: #131921;
+  --color2: #3b4149;
+  --color3: white;
+}
+body {
+  width: 100%;
+  overflow-x: hidden;
+  font-size: 16px;
+  font-weight: 400;
+}
+.container{
+  margin: 0 8rem;
+}
