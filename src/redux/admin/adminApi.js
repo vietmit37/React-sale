@@ -90,3 +90,27 @@ export const adminUploadImgBook = () => {
     }
   };
 };
+
+export const adminCreatBook = () => {
+  return async (data, thunkAPI) => {
+    try {
+      const res = await admin.createBook(data);
+      console.log(res);
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data.message);
+    }
+  };
+};
+
+export const adminUpdateBook = () => {
+  return async (data, thunkAPI) => {
+    try {
+      const res = await admin.updateBook(data);
+      return res.data;
+    } catch (err) {
+      console.log(err);
+      // return thunkAPI.rejectWithValue(err.response.data.message);
+    }
+  };
+};

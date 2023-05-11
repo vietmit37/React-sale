@@ -1,10 +1,12 @@
 import {
   adminBulkCreateUser,
+  adminCreatBook,
   adminCreateUser,
   adminDeleteUser,
   adminGetAllUser,
   adminGetBookPagination,
   adminGetCategory,
+  adminUpdateBook,
   adminUpdateUser,
   adminUploadImgBook,
 } from "./adminApi";
@@ -43,6 +45,14 @@ export const actGetCategory = createAsyncThunk(
 export const actUploadImgBook = createAsyncThunk(
   "admin/actUploadImgBook",
   adminUploadImgBook()
+);
+export const actCreateBook = createAsyncThunk(
+  "admin/actCreateBook",
+  adminCreatBook()
+);
+export const actUpdateBook = createAsyncThunk(
+  "admin/actUpdateBook",
+  adminUpdateBook()
 );
 
 const adminSlice = createSlice({

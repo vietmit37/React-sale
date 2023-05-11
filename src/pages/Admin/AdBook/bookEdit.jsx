@@ -1,4 +1,5 @@
-import { actCreateBook, actUploadImgBook } from "@/redux/admin/adminSlice";
+import { actUpdateBook, actUploadImgBook } from "@/redux/admin/adminSlice";
+import { URL_BACKEND } from "@/utils/config";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
@@ -13,8 +14,9 @@ import {
   message,
   notification,
 } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -32,26 +34,37 @@ const beforeUpload = (file) => {
   }
   return isJpgOrPng && isLt2M;
 };
-const BookCreate = ({ openCreate, setOpenCreate, fetchBook }) => {
+
+const BookEdit = ({
+  openEdit,
+  setOpenEdit,
+  dataUpdate,
+  setDataUpdate,
+  fetchBook,
+  setPaging,
+}) => {
+  const [form] = Form.useForm();
   const { categories } = useSelector((state) => state.admin);
   const [loading, setLoading] = useState(false);
   const [loadingSlider, setLoadingSlider] = useState(false);
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [previewTitle, setPreviewTitle] = useState("");
+  const [initForm, setInitForm] = useState(null);
   const [dataThumbnail, setDataThumbnail] = useState([]);
   const [dataSlider, setDataSlider] = useState([]);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+
   const dispatch = useDispatch();
-  const [form] = Form.useForm();
+
   const handleOk = () => {
     form.submit();
   };
   const handleCancel = () => {
-    setOpenCreate(false);
-    form.resetFields();
-    setDataThumbnail([]);
-    setDataSlider([]);
+    // form.resetFields();
+    // setInitForm(null);
+    setDataUpdate(null);
+    setOpenEdit(false);
   };
   const handleChange = (info, type) => {
     if (info.file.status === "uploading") {
@@ -61,6 +74,32 @@ const BookCreate = ({ openCreate, setOpenCreate, fetchBook }) => {
     if (info.file.status === "done") {
       type ? setLoadingSlider(false) : setLoading(false);
       return;
+    }
+  };
+  const handlePreview = async (file) => {
+    if (file.url && !file.originFileObj) {
+      setPreviewImage(file.url);
+      setPreviewOpen(true);
+      setPreviewTitle(
+        file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+      );
+      return;
+    }
+    getBase64(file.originFileObj, (url) => {
+      setPreviewImage(url);
+      setPreviewOpen(true);
+      setPreviewTitle(
+        file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+      );
+    });
+  };
+  const handleRemoveFile = (file, type) => {
+    if (type === "thumbnail") {
+      setDataThumbnail([]);
+    }
+    if (type === "slider") {
+      const filterDataSlider = dataSlider.filter((x) => x.uid !== file.uid);
+      setDataSlider(filterDataSlider);
     }
   };
   const handleUploadThumbnail = async ({ file, onSuccess, onError }) => {
@@ -97,24 +136,6 @@ const BookCreate = ({ openCreate, setOpenCreate, fetchBook }) => {
     }
     console.log(file);
   };
-  const handleRemoveFile = (file, type) => {
-    if (type === "thumbnail") {
-      setDataThumbnail([]);
-    }
-    if (type === "slider") {
-      const filterDataSlider = dataSlider.filter((x) => x.uid !== file.uid);
-      setDataSlider(filterDataSlider);
-    }
-  };
-  const handlePreview = async (file) => {
-    getBase64(file.originFileObj, (url) => {
-      setPreviewImage(url);
-      setPreviewOpen(true);
-      setPreviewTitle(
-        file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
-      );
-    });
-  };
   const onFinish = async (values) => {
     if (dataThumbnail.length === 0) {
       notification.error({
@@ -128,10 +149,11 @@ const BookCreate = ({ openCreate, setOpenCreate, fetchBook }) => {
         });
       }
     }
-    const { mainText, author, price, sold, quantity, category } = values;
+    const { _id, mainText, author, price, sold, quantity, category } = values;
     const thumbnail = dataThumbnail[0].name;
     const slider = dataSlider.map((item) => item.name);
     const valueData = {
+      _id,
       mainText,
       author,
       price,
@@ -143,13 +165,18 @@ const BookCreate = ({ openCreate, setOpenCreate, fetchBook }) => {
     };
     setIsSubmit(true);
     try {
-      const result = await dispatch(actCreateBook(valueData));
+      const result = await dispatch(actUpdateBook(valueData));
       const actResult = unwrapResult(result);
-      message.success("Tạo book thành công");
-      form.resetFields();
-      setDataSlider([]);
-      setDataThumbnail([]);
-      setOpenCreate(false);
+      message.success("Cập nhật book thành công");
+      //   form.resetFields();
+      //   setDataSlider([]);
+      //   setDataThumbnail([]);
+      //   setInitForm(null);
+      setOpenEdit(false);
+      setPaging((oldPaging) => ({
+        ...oldPaging,
+        current: 1,
+      }));
       await fetchBook();
     } catch (err) {
       notification.error({
@@ -162,14 +189,52 @@ const BookCreate = ({ openCreate, setOpenCreate, fetchBook }) => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+  useEffect(() => {
+    if (dataUpdate?._id) {
+      const arrThumbnail = [
+        {
+          uid: uuidv4(),
+          name: dataUpdate.thumbnail,
+          status: "done",
+          url: `${URL_BACKEND}/images/book/${dataUpdate.thumbnail}`,
+        },
+      ];
+      const arrSlider = dataUpdate?.slider?.map((item) => {
+        return {
+          uid: uuidv4(),
+          name: item,
+          status: "done",
+          url: `${URL_BACKEND}/images/book/${item}`,
+        };
+      });
+      const init = {
+        _id: dataUpdate._id,
+        mainText: dataUpdate.mainText,
+        author: dataUpdate.author,
+        price: dataUpdate.price,
+        category: dataUpdate.category,
+        quantity: dataUpdate.quantity,
+        sold: dataUpdate.sold,
+        thumbnail: { fileList: arrThumbnail },
+        slider: { fileList: arrSlider },
+      };
+      setInitForm(init);
+      setDataThumbnail(arrThumbnail);
+      setDataSlider(arrSlider);
+      form.setFieldsValue(init);
+    }
+    return () => {
+      form.resetFields();
+    };
+  }, [dataUpdate]);
   return (
     <>
       <Modal
         title="Create Book"
-        open={openCreate}
+        open={openEdit}
         onOk={handleOk}
         onCancel={handleCancel}
-        okText={"Create"}
+        okText={"Update"}
         width={880}
         confirmLoading={isSubmit}
       >
@@ -194,6 +259,18 @@ const BookCreate = ({ openCreate, setOpenCreate, fetchBook }) => {
           autoComplete="off"
         >
           <Row gutter={16}>
+            <Form.Item
+              hidden
+              label="ID"
+              name="_id"
+              rules={[
+                {
+                  message: "Please input your name !",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
             <Col span={12}>
               <Form.Item
                 label="Tên sách"
@@ -314,6 +391,7 @@ const BookCreate = ({ openCreate, setOpenCreate, fetchBook }) => {
                   multiple={false}
                   onPreview={handlePreview}
                   onRemove={(file) => handleRemoveFile(file, "thumbnail")}
+                  defaultFileList={initForm?.thumbnail?.fileList ?? []}
                 >
                   {loading ? <LoadingOutlined /> : <PlusOutlined />}
                   Upload
@@ -336,6 +414,7 @@ const BookCreate = ({ openCreate, setOpenCreate, fetchBook }) => {
                   onChange={(info) => handleChange(info, "slider")}
                   onPreview={handlePreview}
                   onRemove={(file) => handleRemoveFile(file, "slider")}
+                  defaultFileList={initForm?.slider?.fileList ?? []}
                 >
                   <div>
                     {loadingSlider ? <LoadingOutlined /> : <PlusOutlined />}
@@ -365,4 +444,4 @@ const BookCreate = ({ openCreate, setOpenCreate, fetchBook }) => {
   );
 };
 
-export default BookCreate;
+export default BookEdit;

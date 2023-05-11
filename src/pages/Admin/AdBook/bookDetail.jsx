@@ -60,7 +60,6 @@ const BookDetail = ({
           });
         });
       }
-      console.log(...imgSlider);
       setFileList([imgThumbnail, ...imgSlider]);
     }
   }, [detailBook]);
@@ -87,7 +86,16 @@ const BookDetail = ({
           <Descriptions.Item label="Tác giả">
             {detailBook?.author}
           </Descriptions.Item>
-          <Descriptions.Item label="Giá">{detailBook?.price}</Descriptions.Item>
+          <Descriptions.Item label="Giá" span={2}>
+            {`${detailBook?.price}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+              " VND"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Số lượng">
+            {detailBook?.quantity}
+          </Descriptions.Item>
+          <Descriptions.Item label="Đã bán">
+            {detailBook?.sold}
+          </Descriptions.Item>
           <Descriptions.Item label="Created At">
             {moment(detailBook?.createdAt).format("DD-MM-YY hh:mm:ss")}
           </Descriptions.Item>

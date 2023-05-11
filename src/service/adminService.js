@@ -44,4 +44,10 @@ export const admin = {
       },
     });
   },
+  createBook(data) {
+    return api.post(`${end_point_book}`, data);
+  },
+  updateBook(data) {
+    return api.put(`${end_point_book}/${data._id}`, data);
+  },
 };

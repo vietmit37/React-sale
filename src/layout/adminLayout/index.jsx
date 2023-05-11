@@ -1,4 +1,9 @@
-import { DownOutlined, FileOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  DownOutlined,
+  FileOutlined,
+  TeamOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import {
   Avatar,
   Breadcrumb,
@@ -107,8 +112,8 @@ const AdminLayout = ({ children }) => {
             />
           </div>
           <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-            <SubMenu key="sub1" icon={<FileOutlined />} title="Manage User">
-              <Menu.Item key="1" icon={<UserOutlined />}>
+            <SubMenu key="sub1" icon={<UserOutlined />} title="Manage User">
+              <Menu.Item key="1" icon={<TeamOutlined />}>
                 <NavLink to="/admin">CRUD</NavLink>
               </Menu.Item>
             </SubMenu>

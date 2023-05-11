@@ -41,6 +41,7 @@ const UserEdit = ({ openEdit, setOpenEdit, dataUpdate, fetchUser }) => {
   }, [dataUpdate]);
   return (
     <>
+      {console.log(dataUpdate)}
       <Modal
         title="Basic Modal"
         open={openEdit}

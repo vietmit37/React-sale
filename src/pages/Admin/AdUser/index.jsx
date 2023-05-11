@@ -250,6 +250,7 @@ const AdminUser = () => {
         ...oldPaging,
         current: 1,
       }));
+      fetchUser();
     } catch (err) {
       notification.error({
         message: "Xảy ra lỗi!!!!",

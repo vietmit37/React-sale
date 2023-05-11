@@ -25,6 +25,8 @@ import {
 } from "@ant-design/icons";
 import BookDetail from "./bookDetail";
 import BookCreate from "./bookCreate";
+import * as XLSX from "xlsx";
+import BookEdit from "./bookEdit";
 
 const AdminBooks = () => {
   const dispatch = useDispatch();
@@ -33,11 +35,13 @@ const AdminBooks = () => {
   const [loading, setLoading] = useState(false);
   const [listBooks, setListBooks] = useState([]);
   const [search, setSearch] = useState("");
-  const [sortQuery, setSortQuery] = useState("");
+  const [sortQuery, setSortQuery] = useState("sort=-updatedAt");
   const [searchCategories, setSearchCategories] = useState("");
   const [detailBook, setDetailBook] = useState([]);
   const [openDetail, setOpenDetail] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [dataUpdate, setDataUpdate] = useState(null);
   const [paging, setPaging] = useState({
     current: 1,
     pageSize: 2,
@@ -58,6 +62,7 @@ const AdminBooks = () => {
             onClick={() => {
               setOpenDetail(true);
               setDetailBook(record);
+              console.log(record);
             }}
           >
             {text}
@@ -92,7 +97,13 @@ const AdminBooks = () => {
       dataIndex: "price",
       key: "price",
       render: (text) =>
-        loading ? <Skeleton active paragraph={{ rows: 0 }} /> : text,
+        loading ? (
+          <Skeleton active paragraph={{ rows: 0 }} />
+        ) : (
+          <div style={{ width: "150px" }}>
+            {`${text}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND"}
+          </div>
+        ),
     },
     {
       title: "Updated At",
@@ -115,9 +126,8 @@ const AdminBooks = () => {
           <EditFilled
             style={{ color: "#eb2f96" }}
             onClick={() => {
-              // setOpenEdit(true);
-              // setDataUpdate(record);
-              console.log(record);
+              setOpenEdit(true);
+              setDataUpdate(record);
             }}
           />
           <Popconfirm
@@ -133,6 +143,14 @@ const AdminBooks = () => {
       ),
     },
   ];
+  const handelExportData = () => {
+    if (listBooks.length > 0) {
+      const worksheet = XLSX.utils.json_to_sheet(listBooks);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+      XLSX.writeFile(workbook, "DataSheet.csv");
+    }
+  };
   const handleRenderHeader = () => {
     return (
       <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -141,7 +159,7 @@ const AdminBooks = () => {
           <Button
             type="primary"
             icon={<ExportOutlined />}
-            // onClick={handelExportData}
+            onClick={handelExportData}
           >
             Export
           </Button>
@@ -154,9 +172,9 @@ const AdminBooks = () => {
           </Button>
           <Button
             type="ghost"
-            // onClick={() => {
-            //   setSortQuery("");
-            // }}
+            onClick={() => {
+              setSortQuery("");
+            }}
           >
             <ReloadOutlined />
           </Button>
@@ -171,7 +189,7 @@ const AdminBooks = () => {
       query += `mainText=/${search}/i&`;
     }
     if (searchCategories) {
-      query += `category=/${searchCategories}/i`;
+      query += `category=/${searchCategories}/i&`;
     }
     if (sortQuery) {
       query += `${sortQuery}`;
@@ -305,7 +323,19 @@ const AdminBooks = () => {
         detailBook={detailBook}
         setDetailBook={setDetailBook}
       />
-      <BookCreate openCreate={openCreate} setOpenCreate={setOpenCreate} />
+      <BookCreate
+        openCreate={openCreate}
+        setOpenCreate={setOpenCreate}
+        fetchBook={fetchBook}
+      />
+      <BookEdit
+        openEdit={openEdit}
+        setOpenEdit={setOpenEdit}
+        dataUpdate={dataUpdate}
+        setDataUpdate={setDataUpdate}
+        fetchBook={fetchBook}
+        setPaging={setPaging}
+      />
     </>
   );
 };
