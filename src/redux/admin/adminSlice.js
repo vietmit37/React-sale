@@ -61,6 +61,7 @@ const adminSlice = createSlice({
     user: null,
     error: null,
     categories: null,
+    books: null,
     isLoading: true,
   },
   reducers: {},
@@ -71,6 +72,14 @@ const adminSlice = createSlice({
       state.isLoading = false;
     },
     [actGetAllUser.rejected]: (state, action) => {
+      state.error = action.payload;
+    },
+    // Get Book
+    [actGetPaginationBook.fulfilled]: (state, action) => {
+      state.books = action.payload.result;
+      state.isLoading = false;
+    },
+    [actGetPaginationBook.rejected]: (state, action) => {
       state.error = action.payload;
     },
     // Get Category Book

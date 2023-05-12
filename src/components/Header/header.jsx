@@ -85,7 +85,9 @@ const Header = () => {
         <div className="container">
           <Row>
             <Col xs={8}>
-              <p>Free Shipping Over $100 & Free Return</p>
+              <p>
+                Miễn phí vận chuyển hóa đơn trên 1.000.000đ & Miễn phí hoàn trả
+              </p>
             </Col>
             <Col xs={8} offset={8}>
               <p>Hotline: 0123 456 789 - 9876 543 210</p>
@@ -133,7 +135,7 @@ const Header = () => {
                     <Badge count={99} size="small" overflowCount={10}>
                       <Avatar shape="square" icon={<ShoppingCartOutlined />} />
                     </Badge>
-                    <p>Cart</p>
+                    <p>Giỏ hàng</p>
                   </Link>
                 </Col>
                 <Col

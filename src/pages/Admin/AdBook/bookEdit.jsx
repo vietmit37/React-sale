@@ -77,6 +77,7 @@ const BookEdit = ({
     }
   };
   const handlePreview = async (file) => {
+    console.log(file);
     if (file.url && !file.originFileObj) {
       setPreviewImage(file.url);
       setPreviewOpen(true);

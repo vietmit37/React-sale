@@ -7,7 +7,7 @@ const MainLayout = lazy(() => import("../layout/mainLayout"));
 const AdminLayout = lazy(() => import("../layout/adminLayout"));
 
 //Pages
-const About = lazy(() => import("../pages/About"));
+const Store = lazy(() => import("../pages/Store"));
 const Home = lazy(() => import("../pages/Home"));
 const NotFound = lazy(() => import("../pages/NotFound"));
 const Login = lazy(() => import("../pages/authentication/login"));
@@ -25,9 +25,9 @@ const routes = [
     element: Home,
   },
   {
-    path: "about",
+    path: "store",
     layout: MainLayout,
-    element: About,
+    element: Store,
   },
   {
     path: "*",

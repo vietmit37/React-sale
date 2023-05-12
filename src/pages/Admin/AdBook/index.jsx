@@ -259,8 +259,10 @@ const AdminBooks = () => {
     }));
   };
   useEffect(() => {
-    fetchBook();
     dispatch(actGetCategory());
+  }, []);
+  useEffect(() => {
+    fetchBook();
   }, [paging.pageSize, paging.current, search, searchCategories, sortQuery]);
   return (
     <>
