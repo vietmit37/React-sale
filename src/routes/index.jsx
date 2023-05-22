@@ -7,11 +7,14 @@ const MainLayout = lazy(() => import("../layout/mainLayout"));
 const AdminLayout = lazy(() => import("../layout/adminLayout"));
 
 //Pages
-const Store = lazy(() => import("../pages/Store"));
-const Home = lazy(() => import("../pages/Home"));
-const NotFound = lazy(() => import("../pages/NotFound"));
-const Login = lazy(() => import("../pages/authentication/login"));
-const Register = lazy(() => import("../pages/authentication/register"));
+const Store = lazy(() => import("@/pages/Store"));
+const BookDetail = lazy(() => import("@/pages/BookDetail"));
+const DetailOrder = lazy(() => import("@/pages/DetailOrder"));
+const History = lazy(() => import("@/pages/history"));
+const Home = lazy(() => import("@/pages/Home"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
+const Login = lazy(() => import("@/pages/authentication/login"));
+const Register = lazy(() => import("@/pages/authentication/register"));
 const AdUser = lazy(() => import("@/pages/Admin/AdUser"));
 const AdBooks = lazy(() => import("@/pages/Admin/AdBook"));
 
@@ -28,6 +31,23 @@ const routes = [
     path: "store",
     layout: MainLayout,
     element: Store,
+  },
+  {
+    path: "book/:slug",
+    layout: MainLayout,
+    element: BookDetail,
+  },
+  {
+    path: "order",
+    layout: MainLayout,
+    guard: Guards,
+    element: DetailOrder,
+  },
+  {
+    path: "history",
+    layout: MainLayout,
+    guard: Guards,
+    element: History,
   },
   {
     path: "*",

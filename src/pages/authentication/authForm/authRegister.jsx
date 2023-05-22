@@ -86,7 +86,6 @@ const AuthRegister = () => {
           {
             type: "email",
             required: true,
-
             message: "The input is not valid E-mail!",
           },
         ]}

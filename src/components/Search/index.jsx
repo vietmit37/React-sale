@@ -12,7 +12,7 @@ const InputSearch = ({ handleSearch }) => {
         enterButton={<SearchOutlined />}
         size="large"
         onChange={(e) => {
-          const { value } = e.target;
+          let { value } = e.target;
           if (searchRef.current) {
             clearTimeout(searchRef.current);
           }

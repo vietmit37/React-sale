@@ -1,10 +1,10 @@
-import { Avatar, Badge, Button, Col, Row, Space } from "antd";
+import { Avatar, Badge, Button, Col, Popover, Row, Space } from "antd";
 import React from "react";
 import "./header.scss";
 import logo from "@/assets/logo/logo.png";
 import { Input, Dropdown } from "antd";
 import { ShoppingCartOutlined, DownOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { actLogout } from "@/redux/auth/authSlice";
 import { URL_BACKEND } from "@/utils/config";
@@ -14,6 +14,8 @@ const onSearch = (value) => console.log(value);
 
 const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { carts } = useSelector((state) => state.order);
   const { data, isAuthenticated } = useSelector((state) => state.auth);
   const URL_AVATAR = `${URL_BACKEND}/images/avatar/${data?.avatar}`;
   const handleLogout = () => {
@@ -36,6 +38,10 @@ const Header = () => {
         </Link>
       ),
       key: "1",
+    },
+    {
+      label: <Link to="/history">Lịch sử đặt hàng</Link>,
+      key: "3",
     },
   ];
 
@@ -78,6 +84,34 @@ const Header = () => {
         </Link>
       );
     }
+  };
+  const contentPopover = () => {
+    return (
+      <div className="popover__body">
+        <div className="popover__content">
+          {!isAuthenticated
+            ? null
+            : carts?.map((item) => {
+                return (
+                  <div className="popover__content--book" key={item._id}>
+                    <img src={`${item.detail.items[0].original}`} />
+                    <div>{item.detail.mainText}</div>
+                    <div>
+                      {new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      }).format(item.detail.price)}
+                    </div>
+                    <div className="overlay"></div>
+                  </div>
+                );
+              })}
+        </div>
+        <div className="popover__footer">
+          <button onClick={() => navigate("/order")}>Xem giỏ hàng</button>
+        </div>
+      </div>
+    );
   };
   return (
     <>
@@ -131,12 +165,29 @@ const Header = () => {
                     span: 8,
                   }}
                 >
-                  <Link className="header__upper-cart">
-                    <Badge count={99} size="small" overflowCount={10}>
-                      <Avatar shape="square" icon={<ShoppingCartOutlined />} />
-                    </Badge>
-                    <p>Giỏ hàng</p>
-                  </Link>
+                  <Popover
+                    rootClassName="popover__carts"
+                    content={contentPopover}
+                    arrow={true}
+                    placement="topLeft"
+                    title={"Sản phẩm thêm mới"}
+                  >
+                    <Link className="header__upper-cart" to="/order">
+                      <Badge
+                        // count={carts?.length ?? 0}
+                        count={!isAuthenticated ? "" : carts?.length}
+                        size="small"
+                        overflowCount={10}
+                        showZero
+                      >
+                        <Avatar
+                          shape="square"
+                          icon={<ShoppingCartOutlined />}
+                        />
+                      </Badge>
+                      <p>Giỏ hàng</p>
+                    </Link>
+                  </Popover>
                 </Col>
                 <Col
                   xs={{

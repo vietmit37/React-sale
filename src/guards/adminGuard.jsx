@@ -9,7 +9,11 @@ const RoleBaseRoute = ({ children }) => {
   const isAdminRoute = window.location.pathname.startsWith("/admin");
   const { data, isLoading } = useSelector((state) => state.auth);
   const userRole = data?.role;
-  if (isAdminRoute && userRole === "ADMIN") {
+  if (
+    (isAdminRoute && userRole === "ADMIN") ||
+    (!isAdminRoute && userRole === "USER") ||
+    userRole === "ADMIN"
+  ) {
     return <>{children}</>;
   } else {
     return <NotPermitted />;

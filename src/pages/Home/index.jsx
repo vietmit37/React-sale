@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar/navbar";
 import { getFetchTest } from "@/redux/test/testSlice";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +12,7 @@ const Home = () => {
   }, []);
   return (
     <div>
+      <Navbar />
       {test?.map((cate, index) => {
         return (
           <div key={index}>

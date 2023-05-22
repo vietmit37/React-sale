@@ -28,7 +28,15 @@ const CardProduct = ({ item }) => {
             />
             <span>{sold}</span>
           </div>
-          <button className="button">Giỏ hàng</button>
+          {/* <button
+            className="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log(123);
+            }}
+          >
+            Giỏ hàng
+          </button> */}
         </div>
       </div>
     </>

@@ -31,6 +31,9 @@ export const admin = {
   getCategory() {
     return api.get(`${end_point_category}`);
   },
+  getBookId(id) {
+    return api.get(`${end_point_book}/${id}`);
+  },
   postUploadBook(fileImg) {
     const bodyFormData = new FormData();
     bodyFormData.append("fileImg", fileImg);

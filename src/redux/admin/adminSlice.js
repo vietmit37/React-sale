@@ -1,14 +1,9 @@
 import {
   adminBulkCreateUser,
-  adminCreatBook,
   adminCreateUser,
   adminDeleteUser,
   adminGetAllUser,
-  adminGetBookPagination,
-  adminGetCategory,
-  adminUpdateBook,
   adminUpdateUser,
-  adminUploadImgBook,
 } from "./adminApi";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
@@ -33,61 +28,25 @@ export const actDeleteUser = createAsyncThunk(
   "admin/actDeleteUser",
   adminDeleteUser()
 );
-// Book
-export const actGetPaginationBook = createAsyncThunk(
-  "admin/actGetPaginationBook",
-  adminGetBookPagination()
-);
-export const actGetCategory = createAsyncThunk(
-  "admin/actGetCategory",
-  adminGetCategory()
-);
-export const actUploadImgBook = createAsyncThunk(
-  "admin/actUploadImgBook",
-  adminUploadImgBook()
-);
-export const actCreateBook = createAsyncThunk(
-  "admin/actCreateBook",
-  adminCreatBook()
-);
-export const actUpdateBook = createAsyncThunk(
-  "admin/actUpdateBook",
-  adminUpdateBook()
-);
 
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
     user: null,
     error: null,
-    categories: null,
-    books: null,
-    isLoading: true,
+    isLoading: false,
   },
   reducers: {},
   extraReducers: {
     // Get all user
+    [actGetAllUser.pending]: (state, action) => {
+      state.isLoading = true;
+    },
     [actGetAllUser.fulfilled]: (state, action) => {
       state.user = action.payload;
       state.isLoading = false;
     },
     [actGetAllUser.rejected]: (state, action) => {
-      state.error = action.payload;
-    },
-    // Get Book
-    [actGetPaginationBook.fulfilled]: (state, action) => {
-      state.books = action.payload.result;
-      state.isLoading = false;
-    },
-    [actGetPaginationBook.rejected]: (state, action) => {
-      state.error = action.payload;
-    },
-    // Get Category Book
-    [actGetCategory.fulfilled]: (state, action) => {
-      state.categories = action.payload;
-      state.isLoading = false;
-    },
-    [actGetCategory.rejected]: (state, action) => {
       state.error = action.payload;
     },
   },

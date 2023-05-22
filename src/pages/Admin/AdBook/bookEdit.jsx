@@ -1,4 +1,4 @@
-import { actUpdateBook, actUploadImgBook } from "@/redux/admin/adminSlice";
+import { actUpdateBook, actUploadImgBook } from "@/redux/book/bookSlice";
 import { URL_BACKEND } from "@/utils/config";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -44,7 +44,7 @@ const BookEdit = ({
   setPaging,
 }) => {
   const [form] = Form.useForm();
-  const { categories } = useSelector((state) => state.admin);
+  const { categories } = useSelector((state) => state.book);
   const [loading, setLoading] = useState(false);
   const [loadingSlider, setLoadingSlider] = useState(false);
   const [initForm, setInitForm] = useState(null);

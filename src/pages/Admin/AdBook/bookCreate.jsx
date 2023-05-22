@@ -1,4 +1,4 @@
-import { actCreateBook, actUploadImgBook } from "@/redux/admin/adminSlice";
+import { actCreateBook, actUploadImgBook } from "@/redux/book/bookSlice";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
@@ -33,7 +33,7 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLt2M;
 };
 const BookCreate = ({ openCreate, setOpenCreate, fetchBook }) => {
-  const { categories } = useSelector((state) => state.admin);
+  const { categories } = useSelector((state) => state.book);
   const [loading, setLoading] = useState(false);
   const [loadingSlider, setLoadingSlider] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);

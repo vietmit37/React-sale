@@ -11,12 +11,11 @@ import {
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { actGetCategory, actGetPaginationBook } from "@/redux/admin/adminSlice";
+import { actGetCategory, actGetPaginationBook } from "@/redux/book/bookSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import moment from "moment";
 import InputSearch from "@/components/Search";
 import {
-  CloudDownloadOutlined,
   DeleteOutlined,
   EditFilled,
   ExportOutlined,
@@ -30,7 +29,7 @@ import BookEdit from "./bookEdit";
 
 const AdminBooks = () => {
   const dispatch = useDispatch();
-  const { categories } = useSelector((state) => state.admin);
+  const { categories } = useSelector((state) => state.book);
   const searchRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [listBooks, setListBooks] = useState([]);

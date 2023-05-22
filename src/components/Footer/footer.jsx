@@ -83,7 +83,7 @@ const Footer = () => {
                   <span>Tuyển Dụng</span>
                 </Link>
                 <Link>
-                  <span>Điều Khoản Shopee</span>
+                  <span>Điều Khoản </span>
                 </Link>
                 <Link>
                   <span>Liên Hệ Với Truyền Thông</span>
