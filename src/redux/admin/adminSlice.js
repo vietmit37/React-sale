@@ -1,4 +1,7 @@
 import {
+  UploadAvtUser,
+  UserChangePassW,
+  adGetDasboard,
   adminBulkCreateUser,
   adminCreateUser,
   adminDeleteUser,
@@ -28,15 +31,28 @@ export const actDeleteUser = createAsyncThunk(
   "admin/actDeleteUser",
   adminDeleteUser()
 );
+export const actUploadAvtUser = createAsyncThunk(
+  "admin/actUploadAvtUser",
+  UploadAvtUser()
+);
+export const actChangePassW = createAsyncThunk(
+  "admin/actChangePassW",
+  UserChangePassW()
+);
+export const actGetDashboard = createAsyncThunk(
+  "admin/actGetDashboard",
+  adGetDasboard()
+);
 
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
     user: null,
     error: null,
+    dasboard: null,
     isLoading: false,
   },
-  reducers: {},
+
   extraReducers: {
     // Get all user
     [actGetAllUser.pending]: (state, action) => {
@@ -49,10 +65,21 @@ const adminSlice = createSlice({
     [actGetAllUser.rejected]: (state, action) => {
       state.error = action.payload;
     },
+    // Get Dashboard
+    [actGetDashboard.pending]: (state, action) => {
+      state.isLoading = true;
+    },
+    [actGetDashboard.fulfilled]: (state, action) => {
+      state.dasboard = action.payload;
+      state.isLoading = false;
+    },
+    [actGetDashboard.rejected]: (state, action) => {
+      state.error = action.payload;
+    },
   },
 });
 
-export const { searchUser } = adminSlice.actions;
+export const {} = adminSlice.actions;
 
 const { reducer: adminReducer } = adminSlice;
 export default adminReducer;

@@ -1,5 +1,5 @@
 import { Avatar, Badge, Button, Col, Popover, Row, Space } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import "./header.scss";
 import logo from "@/assets/logo/logo.png";
 import { Input, Dropdown } from "antd";
@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { actLogout } from "@/redux/auth/authSlice";
 import { URL_BACKEND } from "@/utils/config";
+import ManageAccount from "@/pages/Account";
 
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
@@ -16,8 +17,10 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { carts } = useSelector((state) => state.order);
-  const { data, isAuthenticated } = useSelector((state) => state.auth);
-  const URL_AVATAR = `${URL_BACKEND}/images/avatar/${data?.avatar}`;
+  const { data, isAuthenticated, tempAvt } = useSelector((state) => state.auth);
+  const [open, setOpen] = useState(false);
+  const URL_AVATAR = `${URL_BACKEND}/images/avatar/${tempAvt || data?.avatar}`;
+
   const handleLogout = () => {
     dispatch(actLogout());
   };
@@ -25,7 +28,7 @@ const Header = () => {
   let items = [
     {
       label: (
-        <a target="_blank" rel="noopener noreferrer">
+        <a rel="noopener noreferrer" onClick={() => setOpen(true)}>
           Quản lý tài khoản
         </a>
       ),
@@ -47,7 +50,7 @@ const Header = () => {
 
   if (data?.role === "ADMIN") {
     items.unshift({
-      label: <Link to="/admin">Trang quản trị</Link>,
+      label: <Link to="/admins">Trang quản trị</Link>,
       key: "2",
     });
   }
@@ -200,6 +203,7 @@ const Header = () => {
               </Row>
             </Col>
           </Row>
+          <ManageAccount open={open} setOpen={setOpen} />
         </div>
       </header>
     </>

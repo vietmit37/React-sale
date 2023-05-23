@@ -22,8 +22,20 @@ const autSlice = createSlice({
   initialState: {
     data: null,
     error: null,
+    tempAvt: null,
     isAuthenticated: false,
     isLoading: true,
+  },
+  reducers: {
+    // Update account
+    doUpdateUserInf: (state, action) => {
+      state.data.avatar = action.payload.avatar;
+      state.data.fullName = action.payload.fullName;
+      state.data.phone = action.payload.phone;
+    },
+    doUpdateTempAvt: (state, action) => {
+      state.tempAvt = action.payload;
+    },
   },
   extraReducers: {
     // Register
@@ -64,7 +76,7 @@ const autSlice = createSlice({
   },
 });
 
-export const { data, error, isLoading, isAuthenticated } = autSlice.actions;
+export const { doUpdateUserInf, doUpdateTempAvt } = autSlice.actions;
 
 const { reducer: authReducer } = autSlice;
 export default authReducer;

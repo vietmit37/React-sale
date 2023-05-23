@@ -29,6 +29,7 @@ const AdminLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const dispatch = useDispatch();
   const { data, isAuthenticated } = useSelector((state) => state.auth);
+  const [menuActive, setMenuActive] = useState("1");
   const URL_AVATAR = `${URL_BACKEND}/images/avatar/${data?.avatar}`;
   const handleLogout = () => {
     dispatch(actLogout());
@@ -38,11 +39,7 @@ const AdminLayout = ({ children }) => {
   });
   const items = [
     {
-      label: (
-        <a target="_blank" rel="noopener noreferrer">
-          Quản lý tài khoản
-        </a>
-      ),
+      label: <a rel="noopener noreferrer">Quản lý tài khoản</a>,
       key: "0",
     },
     {
@@ -92,6 +89,17 @@ const AdminLayout = ({ children }) => {
       );
     }
   };
+  useEffect(() => {
+    if (window.location.pathname.includes("/admins")) {
+      setMenuActive("1");
+    } else if (window.location.pathname.includes("/user")) {
+      setMenuActive("2");
+    } else if (window.location.pathname.includes("/book")) {
+      setMenuActive("3");
+    } else if (window.location.pathname.includes("/order")) {
+      setMenuActive("4");
+    }
+  }, []);
   return (
     <Fragment>
       <Layout
@@ -111,17 +119,32 @@ const AdminLayout = ({ children }) => {
               style={{ width: "50%", height: "60px", objectFit: "cover" }}
             />
           </div>
-          <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-            <SubMenu key="sub1" icon={<UserOutlined />} title="Manage User">
-              <Menu.Item key="1" icon={<TeamOutlined />}>
-                <NavLink to="/admin">CRUD</NavLink>
+          <Menu
+            theme="dark"
+            // defaultSelectedKeys={["1"]}
+            mode="inline"
+            onClick={(e) => {
+              setMenuActive(e.key);
+              console.log(e.key);
+            }}
+            selectedKeys={[menuActive]}
+          >
+            <Menu.Item icon={<TeamOutlined />} key="1">
+              <NavLink to="/admins">Dashboard</NavLink>
+            </Menu.Item>
+            <SubMenu icon={<UserOutlined />} title="Manage User">
+              <Menu.Item key="2" icon={<TeamOutlined />}>
+                <NavLink to="/admin/user">CRUD</NavLink>
               </Menu.Item>
             </SubMenu>
-            <SubMenu key="sub2" icon={<FileOutlined />} title="Manage Books">
-              <Menu.Item key="2" icon={<FileOutlined />}>
+            <SubMenu icon={<FileOutlined />} title="Manage Books">
+              <Menu.Item key="3" icon={<FileOutlined />}>
                 <NavLink to="/admin/books">CRUD</NavLink>
               </Menu.Item>
             </SubMenu>
+            <Menu.Item icon={<TeamOutlined />} key="4">
+              <NavLink to="/admin/order">Manage Order</NavLink>
+            </Menu.Item>
           </Menu>
         </Sider>
         <Layout className="site-layout">

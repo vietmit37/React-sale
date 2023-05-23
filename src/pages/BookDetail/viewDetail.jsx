@@ -45,7 +45,7 @@ const ViewDetail = ({ bookIdState }) => {
     <div className="detailBook">
       <div className="container">
         <Row>
-          <Col xs={12}>
+          <Col sm={24} md={12}>
             <ImageGallery
               ref={ref}
               items={images}
@@ -60,7 +60,7 @@ const ViewDetail = ({ bookIdState }) => {
               }}
             />
           </Col>
-          <Col xs={12}>
+          <Col sm={24} md={12}>
             <div>
               <span>Tác giả: </span>
               <span>{bookIdState?.author}</span>

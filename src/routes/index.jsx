@@ -17,18 +17,20 @@ const Login = lazy(() => import("@/pages/authentication/login"));
 const Register = lazy(() => import("@/pages/authentication/register"));
 const AdUser = lazy(() => import("@/pages/Admin/AdUser"));
 const AdBooks = lazy(() => import("@/pages/Admin/AdBook"));
+const AdOrder = lazy(() => import("@/pages/Admin/AdOrder"));
+const Dashboard = lazy(() => import("@/pages/Admin/Dashboard"));
 
 // Guard
 const Guards = lazy(() => import("@/guards/adminGuard"));
 
 const routes = [
+  // {
+  //   path: "",
+  //   layout: MainLayout,
+  //   element: Home,
+  // },
   {
     path: "",
-    layout: MainLayout,
-    element: Home,
-  },
-  {
-    path: "store",
     layout: MainLayout,
     element: Store,
   },
@@ -62,7 +64,7 @@ const routes = [
     element: Register,
   },
   {
-    path: "admin",
+    path: "admin/user",
     layout: AdminLayout,
     guard: Guards,
     element: AdUser,
@@ -72,6 +74,18 @@ const routes = [
     layout: AdminLayout,
     guard: Guards,
     element: AdBooks,
+  },
+  {
+    path: "admin/order",
+    layout: AdminLayout,
+    guard: Guards,
+    element: AdOrder,
+  },
+  {
+    path: "admins",
+    layout: AdminLayout,
+    guard: Guards,
+    element: Dashboard,
   },
 ];
 

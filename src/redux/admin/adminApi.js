@@ -1,4 +1,5 @@
 import { admin } from "@/service/adminService";
+import { doUpdateUserInf } from "../auth/authSlice";
 
 // User
 export const adminGetAllUser = () => {
@@ -38,6 +39,7 @@ export const adminUpdateUser = () => {
   return async (data, thunkAPI) => {
     try {
       const res = await admin.updateUser(data);
+      thunkAPI.dispatch(doUpdateUserInf(data));
       return res;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data.message[0]);
@@ -50,6 +52,42 @@ export const adminDeleteUser = () => {
     try {
       const res = await admin.deleteUser(data);
       return res;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data.message);
+    }
+  };
+};
+
+export const UploadAvtUser = () => {
+  return async (data, thunkAPI) => {
+    try {
+      const res = await admin.postUploadUser(data);
+      console.log(res);
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data.message);
+    }
+  };
+};
+
+export const UserChangePassW = () => {
+  return async (data, thunkAPI) => {
+    try {
+      const res = await admin.postChangePassW(data);
+      console.log(res);
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data.message);
+    }
+  };
+};
+
+export const adGetDasboard = () => {
+  return async (data, thunkAPI) => {
+    try {
+      const res = await admin.getDashboard();
+      console.log(res);
+      return res.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data.message);
     }

@@ -3,7 +3,9 @@ import { api } from "./baseService";
 const end_point = "user";
 const end_point_book = "book";
 const end_point_category = "database/category";
-const end_point_uploadBook = "file/upload";
+const end_point_upload = "file/upload";
+const end_point_changePassw = "user/change-password";
+const end_point_Dashboard = "database/dashboard";
 export const admin = {
   // User
   getAllUser() {
@@ -15,6 +17,19 @@ export const admin = {
   createUser(data) {
     return api.post(`${end_point}`, data);
   },
+  postUploadUser(fileImg) {
+    const bodyFormData = new FormData();
+    bodyFormData.append("fileImg", fileImg);
+    return api({
+      method: "post",
+      url: `${end_point_upload}`,
+      data: bodyFormData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "upload-type": "avatar",
+      },
+    });
+  },
   bulkCreateUser(data) {
     return api.post(`${end_point}/bulk-create`, data);
   },
@@ -24,6 +39,10 @@ export const admin = {
   deleteUser(id) {
     return api.delete(`${end_point}/${id}`);
   },
+  postChangePassW(data) {
+    return api.post(`${end_point_changePassw}`, data);
+  },
+
   // Book
   getBookPagination(query) {
     return api.get(`${end_point_book}?${query}`);
@@ -39,7 +58,7 @@ export const admin = {
     bodyFormData.append("fileImg", fileImg);
     return api({
       method: "post",
-      url: `${end_point_uploadBook}`,
+      url: `${end_point_upload}`,
       data: bodyFormData,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -52,5 +71,10 @@ export const admin = {
   },
   updateBook(data) {
     return api.put(`${end_point_book}/${data._id}`, data);
+  },
+
+  // Dashboard
+  getDashboard() {
+    return api.get(`${end_point_Dashboard}`);
   },
 };

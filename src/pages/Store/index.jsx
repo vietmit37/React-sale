@@ -1,5 +1,4 @@
 import CardProduct from "@/components/CardProduct/cardProduct";
-import Navbar from "@/components/Navbar/navbar";
 import { actGetCategory, actGetPaginationBook } from "@/redux/book/bookSlice";
 import { ReloadOutlined } from "@ant-design/icons";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -167,10 +166,9 @@ const Store = () => {
   }, []);
   return (
     <>
-      <Navbar />
       <div className="container">
         <Row>
-          <Col xs={0} md={6}>
+          <Col xs={0} md={16} xl={6}>
             <Card bordered={false} style={{ width: "300px" }}>
               <Space>
                 <p>Bộ lọc</p>
@@ -248,7 +246,7 @@ const Store = () => {
               </Form>
             </Card>
           </Col>
-          <Col xs={24} md={18}>
+          <Col xs={24} md={8} xl={18}>
             <Spin spinning={isLoading} tip="...loading">
               <Tabs
                 defaultActiveKey="sort=-sold"
@@ -258,11 +256,11 @@ const Store = () => {
               <Row>
                 {books?.map((item) => {
                   return (
-                    <div
-                      onClick={() => handleRedirectBook(item)}
-                      key={item._id}
-                    >
-                      <CardProduct item={item} />
+                    <div key={item._id}>
+                      <CardProduct
+                        item={item}
+                        handleClick={handleRedirectBook}
+                      />
                     </div>
                   );
                 })}
