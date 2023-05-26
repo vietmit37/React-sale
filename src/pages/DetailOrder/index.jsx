@@ -5,6 +5,7 @@ import { DeleteOutlined, SmileOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCarts, updateCarts } from "@/redux/order/orderSlice";
 import Payment from "./payment";
+import { useNavigate } from "react-router-dom";
 
 const DetailOrder = () => {
   const { carts } = useSelector((state) => state.order);
@@ -18,6 +19,7 @@ const DetailOrder = () => {
     return cart.userId === data?.id;
   });
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSelectAll = () => {
     setIsCheckAll(!isCheckAll);
@@ -306,7 +308,11 @@ const DetailOrder = () => {
             <Result
               icon={<SmileOutlined />}
               title="Đơn hàng đã được đặt thành công"
-              extra={<Button type="primary">Xem lịch sử</Button>}
+              extra={
+                <Button type="primary" onClick={() => navigate("/history")}>
+                  Xem lịch sử
+                </Button>
+              }
             />
           </>
         )}
