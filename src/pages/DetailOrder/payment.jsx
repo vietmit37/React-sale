@@ -150,13 +150,10 @@ const Payment = ({ isValue, setCurrentStep }) => {
                 name="basic"
                 layout="vertical"
                 labelCol={{
-                  span: 8,
+                  span: 24,
                 }}
                 wrapperCol={{
                   span: 24,
-                }}
-                style={{
-                  minWidth: "400px",
                 }}
                 initialValues={{
                   remember: true,

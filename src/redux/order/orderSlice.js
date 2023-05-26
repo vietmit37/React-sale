@@ -25,7 +25,7 @@ const orderSlice = createSlice({
       let carts = state.carts;
       const items = action.payload;
       let indexCarts = carts.findIndex((c) => c._id === items._id);
-      if (indexCarts > -1) {
+      if (indexCarts > -1 && carts[indexCarts].userId === items.userId) {
         // quantity
         carts[indexCarts].quantityOrder =
           carts[indexCarts].quantityOrder + items.quantityOrder;
@@ -36,6 +36,7 @@ const orderSlice = createSlice({
         }
       } else {
         carts.push({
+          userId: items.userId,
           quantityOrder: items.quantityOrder,
           _id: items._id,
           detail: items.detail,
@@ -48,7 +49,7 @@ const orderSlice = createSlice({
       let carts = state.carts;
       const items = action.payload;
       let indexCarts = carts.findIndex((c) => c._id === items._id);
-      if (indexCarts > -1) {
+      if (indexCarts > -1 && carts[indexCarts].userId === items.userId) {
         // quantity
         carts[indexCarts].quantityOrder = items.quantityOrder;
         if (
@@ -58,6 +59,7 @@ const orderSlice = createSlice({
         }
       } else {
         carts.push({
+          userId: items.userId,
           quantityOrder: items.quantityOrder,
           _id: items._id,
           detail: items.detail,

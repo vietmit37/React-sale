@@ -1,3 +1,5 @@
+@import "../src/css-config/mixin.scss";
+@import "../src/css-config/varibale.scss";
 .footer {
   background-color: var(--color1);
   color: var(--color3);
@@ -107,6 +109,24 @@
       &:hover::before {
         width: 100%;
         opacity: 1;
+      }
+    }
+  }
+}
+
+@include responsive("small") {
+  .footer {
+    &__content {
+      a {
+        font-size: 11px;
+      }
+    }
+    &__inputGr {
+      input {
+        margin-bottom: 10px;
+      }
+      span {
+        padding: 0.7rem 10px;
       }
     }
   }

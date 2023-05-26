@@ -10,8 +10,8 @@ const Footer = () => {
     <>
       <footer className="footer">
         <div className="container">
-          <Row gutter={16} align="middle">
-            <Col xs={12}>
+          <Row align="middle">
+            <Col xs={6} lg={12}>
               <div className="footer__logo">
                 <img
                   src={logo}
@@ -20,7 +20,7 @@ const Footer = () => {
                 />
               </div>
             </Col>
-            <Col xs={12}>
+            <Col xs={18} lg={12}>
               <div className="footer__inputGr">
                 <input placeholder="Your Email Adress" type="text" />
                 <span>Subscribe</span>
@@ -29,10 +29,17 @@ const Footer = () => {
           </Row>
         </div>
       </footer>
-      <footer className="footer">
+      <footer className="footer ">
         <div className="container">
-          <Row>
-            <Col xs={12} md={6}>
+          <Row className="footer__uper" gutter={[20, 20]}>
+            <Col
+              xs={12}
+              md={6}
+              lg={{
+                span: 6,
+                offset: 0,
+              }}
+            >
               <h4>Thông tin liên hệ</h4>
               <div className="footer__content contact">
                 <address>
@@ -56,7 +63,17 @@ const Footer = () => {
                 </div>
               </div>
             </Col>
-            <Col xs={12} md={6}>
+            <Col
+              xs={12}
+              md={{
+                span: 4,
+                offset: 2,
+              }}
+              lg={{
+                span: 6,
+                offset: 0,
+              }}
+            >
               <h4>CHĂM SÓC KHÁCH HÀNG</h4>
               <div className="footer__content flex ">
                 <Link to="/privacy-policy">
@@ -76,7 +93,17 @@ const Footer = () => {
                 </Link>
               </div>
             </Col>
-            <Col xs={12} md={6}>
+            <Col
+              xs={12}
+              md={{
+                span: 5,
+                offset: 1,
+              }}
+              lg={{
+                span: 6,
+                offset: 0,
+              }}
+            >
               <h4>VỀ CHÚNG TÔI</h4>
               <div className="footer__content flex">
                 <Link>
@@ -90,7 +117,16 @@ const Footer = () => {
                 </Link>
               </div>
             </Col>
-            <Col xs={12} md={4}>
+            <Col
+              xs={12}
+              md={{
+                span: 6,
+              }}
+              lg={{
+                span: 6,
+                offset: 0,
+              }}
+            >
               <h4>THANH TOÁN</h4>
               <div className="footer__content">
                 <Row>

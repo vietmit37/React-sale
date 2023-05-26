@@ -17,8 +17,11 @@ import {
   Tabs,
 } from "antd";
 import React, { useEffect, useState } from "react";
+import { AiFillFilter } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import "./store.scss";
+import FilterMobile from "./filterMobile";
 
 const Store = () => {
   const [form] = Form.useForm();
@@ -27,6 +30,8 @@ const Store = () => {
   const { books, categories, isLoading } = useSelector((state) => state.book);
   const [filter, setFilter] = useState("");
   const [tabs, setTabs] = useState("sort=-sold");
+  const [openFilterMobile, setOpenFilterMobile] = useState(false);
+
   const items = [
     {
       key: "sort=-sold",
@@ -51,7 +56,7 @@ const Store = () => {
   ];
   const [paging, setPaging] = useState({
     current: 1,
-    pageSize: 6,
+    pageSize: 8,
     total: 10,
   });
   const fetchBook = async () => {
@@ -167,9 +172,9 @@ const Store = () => {
   return (
     <>
       <div className="container">
-        <Row>
-          <Col xs={0} md={16} xl={6}>
-            <Card bordered={false} style={{ width: "300px" }}>
+        <Row gutter={[20, 20]}>
+          <Col xs={0} md={9} xl={6}>
+            <Card bordered={false} style={{ width: "100%" }}>
               <Space>
                 <p>Bộ lọc</p>
                 <Button
@@ -209,7 +214,10 @@ const Store = () => {
                 <Divider />
                 <Form.Item label="Khoảng giá" labelCol={{ span: 24 }}>
                   <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
                   >
                     <Form.Item name={["range", "from"]}>
                       <InputNumber
@@ -246,13 +254,26 @@ const Store = () => {
               </Form>
             </Card>
           </Col>
-          <Col xs={24} md={8} xl={18}>
+          <Col xs={24} md={15} xl={18}>
             <Spin spinning={isLoading} tip="...loading">
               <Tabs
                 defaultActiveKey="sort=-sold"
                 items={items}
                 onChange={onChangeTabs}
               />
+              {/* mobile */}
+              <div className="filter__screen--mobile">
+                <AiFillFilter onClick={() => setOpenFilterMobile(true)} />
+                <FilterMobile
+                  openFilterMobile={openFilterMobile}
+                  setOpenFilterMobile={setOpenFilterMobile}
+                  handleFilterChange={handleFilterChange}
+                  onFinish={onFinish}
+                  setFilter={setFilter}
+                />
+              </div>
+              {/* mobile end*/}
+
               <Row>
                 {books?.map((item) => {
                   return (

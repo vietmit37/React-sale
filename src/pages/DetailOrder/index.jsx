@@ -8,32 +8,40 @@ import Payment from "./payment";
 
 const DetailOrder = () => {
   const { carts } = useSelector((state) => state.order);
+  const { data } = useSelector((state) => state.auth);
   const [total, setTotal] = useState(0);
   const [isCheck, setIsCheck] = useState([]);
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [isValue, setIsValue] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
-  const optionId = carts?.map((cart) => {
-    cart._id;
+  const optionId = carts?.filter((cart) => {
+    return cart.userId === data?.id;
   });
   const dispatch = useDispatch();
 
   const handleSelectAll = () => {
-    let sum = 0;
     setIsCheckAll(!isCheckAll);
-    setIsCheck(carts?.map((cart) => cart?._id));
-    carts.map((cart) => (sum += cart?.quantityOrder * cart.detail.price));
-    setTotal(sum);
+    setIsCheck(
+      carts
+        ?.map((cart) => {
+          if (cart.userId === data?.id) {
+            return cart._id;
+          }
+        })
+        .filter((item) => item)
+    );
     setIsValue(
-      carts?.map((cart) => {
-        return {
-          ...isValue,
-          _id: cart._id,
-          value: cart.quantityOrder * cart.detail.price,
-          detail: cart.detail,
-          quantityOrder: cart.quantityOrder,
-        };
-      })
+      carts
+        .filter((item) => item.userId === data.id)
+        .map((cart) => {
+          return {
+            ...isValue,
+            _id: cart._id,
+            value: cart.quantityOrder * cart.detail.price,
+            detail: cart.detail,
+            quantityOrder: cart.quantityOrder,
+          };
+        })
     );
     if (isCheckAll) {
       setIsCheck([]);
@@ -59,6 +67,7 @@ const DetailOrder = () => {
       setIsValue(isValue.filter((item) => item._id !== id));
     }
   };
+
   const handleChangeBtn = (type, cart) => {
     if (type === "plus") {
       if (cart.quantityOrder === +cart.detail.quantity) return;
@@ -80,113 +89,118 @@ const DetailOrder = () => {
       );
     }
   };
+
   const renderProductOrder = () => {
     return carts?.map((cart) => {
-      return (
-        <Fragment key={cart?._id}>
-          <div className="order__product order__box">
-            <Col xs={8}>
-              <input
-                type="checkbox"
-                id={cart._id}
-                checked={isCheck.includes(cart._id)}
-                value={cart.quantityOrder * cart.detail.price}
-                onChange={(e) => handleClick(e, cart)}
-              />
-              <div className="order__product--title">
-                <img
-                  src={`${cart?.detail?.items[0]?.original}`}
-                  style={{ width: "100px" }}
+      if (cart.userId === data.id) {
+        return (
+          <Fragment key={cart?._id}>
+            <div className="order__product order__box">
+              <Col xs={8}>
+                <input
+                  type="checkbox"
+                  id={cart._id}
+                  checked={isCheck.includes(cart._id)}
+                  value={cart.quantityOrder * cart.detail.price}
+                  onChange={(e) => handleClick(e, cart)}
                 />
-                <p>{cart?.detail?.mainText}</p>
-              </div>
-            </Col>
-            <Col xs={4}>
-              {new Intl.NumberFormat("vi-VN", {
-                style: "currency",
-                currency: "VND",
-              }).format(cart.detail.price)}
-            </Col>
-            <Col xs={4}>
-              <div className="order__product--quantity">
-                <div className="quantity--inpGr">
-                  <button
-                    id={`${cart._id}`}
-                    onClick={() => handleChangeBtn("minus", cart)}
-                    disabled={isCheck.includes(cart._id)}
-                  >
-                    -
-                  </button>
-                  <input
-                    type="text"
-                    role="spinbutton"
-                    aria-valuenow="1"
-                    disabled={isCheck.includes(cart._id)}
-                    onChange={(e) => {
-                      let { value } = e.target;
-                      if (!isNaN(value)) {
-                        if (+value < +cart.detail.quantity) {
-                          dispatch(
-                            updateCarts({
-                              ...cart,
-                              quantityOrder: +value,
-                            })
-                          );
-                        }
-                        if (+value > +cart.detail.quantity) {
-                          dispatch(
-                            updateCarts({
-                              ...cart,
-                              quantityOrder: cart.detail.quantity,
-                            })
-                          );
-                        }
-                      }
-                    }}
-                    value={cart.quantityOrder}
-                    onBlur={(e) => {
-                      e.target.value == 0 ? 1 : "";
-                      dispatch(
-                        updateCarts({
-                          ...cart,
-                          quantityOrder:
-                            e.target.value == 0 ? 1 : cart.quantityOrder,
-                        })
-                      );
-                    }}
+                <div className="order__product--title">
+                  <img
+                    src={`${cart?.detail?.items[0]?.original}`}
+                    style={{ width: "100px" }}
                   />
-                  <button
-                    onClick={() => handleChangeBtn("plus", cart)}
-                    disabled={isCheck.includes(cart._id)}
-                  >
-                    +
-                  </button>
+                  <p>{cart?.detail?.mainText}</p>
                 </div>
-              </div>
-            </Col>
+              </Col>
+              <Col xs={4}>
+                {new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(cart.detail.price)}
+              </Col>
+              <Col xs={4}>
+                <div className="order__product--quantity">
+                  <div className="quantity--inpGr">
+                    <button
+                      id={`${cart._id}`}
+                      onClick={() => handleChangeBtn("minus", cart)}
+                      disabled={isCheck.includes(cart._id)}
+                    >
+                      -
+                    </button>
+                    <input
+                      type="text"
+                      role="spinbutton"
+                      aria-valuenow="1"
+                      disabled={isCheck.includes(cart._id)}
+                      onChange={(e) => {
+                        let { value } = e.target;
+                        if (!isNaN(value)) {
+                          if (+value < +cart.detail.quantity) {
+                            dispatch(
+                              updateCarts({
+                                ...cart,
+                                quantityOrder: +value,
+                              })
+                            );
+                          }
+                          if (+value > +cart.detail.quantity) {
+                            dispatch(
+                              updateCarts({
+                                ...cart,
+                                quantityOrder: cart.detail.quantity,
+                              })
+                            );
+                          }
+                        }
+                      }}
+                      value={cart.quantityOrder}
+                      onBlur={(e) => {
+                        e.target.value == 0 ? 1 : "";
+                        dispatch(
+                          updateCarts({
+                            ...cart,
+                            quantityOrder:
+                              e.target.value == 0 ? 1 : cart.quantityOrder,
+                          })
+                        );
+                      }}
+                    />
+                    <button
+                      onClick={() => handleChangeBtn("plus", cart)}
+                      disabled={isCheck.includes(cart._id)}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </Col>
 
-            <Col xs={4}>
-              {new Intl.NumberFormat("vi-VN", {
-                style: "currency",
-                currency: "VND",
-              }).format(cart.quantityOrder * cart.detail.price)}
-            </Col>
-            <Col xs={4}>
-              <DeleteOutlined
-                onClick={() => {
-                  setIsValue(isValue.filter((item) => item._id !== cart._id));
-                  dispatch(deleteCarts({ _id: cart._id }));
-                }}
-              />
-            </Col>
-          </div>
-        </Fragment>
-      );
+              <Col xs={4}>
+                {new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(cart.quantityOrder * cart.detail.price)}
+              </Col>
+              <Col xs={4}>
+                <DeleteOutlined
+                  onClick={() => {
+                    setIsValue(isValue.filter((item) => item._id !== cart._id));
+                    dispatch(deleteCarts({ _id: cart._id }));
+                  }}
+                />
+              </Col>
+            </div>
+          </Fragment>
+        );
+      }
     });
   };
+
   useEffect(() => {
     setIsCheckAll(isCheck?.length === optionId.length);
   }, [isCheck]);
+
   useEffect(() => {
     let sum = 0;
     if (isValue && isValue.length > 0) {

@@ -7,12 +7,13 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { addCart } from "@/redux/order/orderSlice";
 import { Navigate, useNavigate } from "react-router-dom";
+import { auth } from "@/service/authService";
 
 const ViewDetail = ({ bookIdState }) => {
   const [isOpen, setIsOpen] = useState();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentQuantity, setCurrentQuantity] = useState(1);
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated, data } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const ref = useRef(null);
@@ -39,8 +40,7 @@ const ViewDetail = ({ bookIdState }) => {
       }
     }
   };
-  const handleAddCart = () => {};
-
+  console.log(data);
   return (
     <div className="detailBook">
       <div className="container">
@@ -116,6 +116,7 @@ const ViewDetail = ({ bookIdState }) => {
                   }
                   dispatch(
                     addCart({
+                      userId: data?.id,
                       quantityOrder: currentQuantity,
                       detail: bookIdState,
                       _id: bookIdState._id,

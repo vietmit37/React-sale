@@ -97,6 +97,9 @@
   }
 }
 .payment__box {
+  display: flex;
+  justify-content: center;
+  width: 400px;
   .payment {
     &__action {
       margin-bottom: 1rem;

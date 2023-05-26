@@ -1,0 +1,11 @@
+@import "../src/css-config/mixin.scss";
+@import "../src/css-config/varibale.scss";
+
+.filter__screen--mobile {
+  display: none;
+}
+@include responsive("medium-down") {
+  .filter__screen--mobile {
+    display: block;
+  }
+}

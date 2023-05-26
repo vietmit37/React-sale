@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { actLogout } from "@/redux/auth/authSlice";
 import { URL_BACKEND } from "@/utils/config";
 import ManageAccount from "@/pages/Account";
+import { AiOutlineMenu } from "react-icons/ai";
 
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
@@ -66,16 +67,31 @@ const Header = () => {
             onClick={(e) => e.preventDefault()}
             className="header__upper-account header__upper-auth"
           >
-            <Avatar
-              src={URL_AVATAR}
-              style={{
-                backgroundColor: "#cffdf8",
-                color: "#f56a00",
-                marginRight: "1rem",
-              }}
-            />
-            {user}
-            <DownOutlined />
+            <Space rootClassName="auth__large">
+              <Avatar
+                src={URL_AVATAR}
+                style={{
+                  display: "block",
+                  backgroundColor: "#cffdf8",
+                  color: "#f56a00",
+                }}
+              />
+              {user}
+              <DownOutlined />
+            </Space>
+            <Space rootClassName="auth__small">
+              <Space>
+                <Avatar
+                  src={URL_AVATAR}
+                  style={{
+                    display: "block",
+                    backgroundColor: "#cffdf8",
+                    color: "#f56a00",
+                  }}
+                />
+                <AiOutlineMenu />
+              </Space>
+            </Space>
           </Link>
         </Dropdown>
       );
@@ -95,19 +111,21 @@ const Header = () => {
           {!isAuthenticated
             ? null
             : carts?.map((item) => {
-                return (
-                  <div className="popover__content--book" key={item._id}>
-                    <img src={`${item.detail.items[0].original}`} />
-                    <div>{item.detail.mainText}</div>
-                    <div>
-                      {new Intl.NumberFormat("vi-VN", {
-                        style: "currency",
-                        currency: "VND",
-                      }).format(item.detail.price)}
+                if (item.userId === data.id) {
+                  return (
+                    <div className="popover__content--book" key={item._id}>
+                      <img src={`${item.detail.items[0].original}`} />
+                      <div>{item.detail.mainText}</div>
+                      <div>
+                        {new Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        }).format(item.detail.price)}
+                      </div>
+                      <div className="overlay"></div>
                     </div>
-                    <div className="overlay"></div>
-                  </div>
-                );
+                  );
+                }
               })}
         </div>
         <div className="popover__footer">
@@ -115,6 +133,10 @@ const Header = () => {
         </div>
       </div>
     );
+  };
+
+  const countCartd = () => {
+    return carts.filter((item) => item.userId === data?.id).length;
   };
   return (
     <>
@@ -162,10 +184,10 @@ const Header = () => {
                 offset: 2,
               }}
             >
-              <Row align={"middle"}>
+              <Row align={"middle"} gutter={[30, 20]}>
                 <Col
                   xs={{
-                    span: 8,
+                    span: 12,
                   }}
                 >
                   <Popover
@@ -178,7 +200,7 @@ const Header = () => {
                     <Link className="header__upper-cart" to="/order">
                       <Badge
                         // count={carts?.length ?? 0}
-                        count={!isAuthenticated ? "" : carts?.length}
+                        count={countCartd()}
                         size="small"
                         overflowCount={10}
                         showZero
@@ -188,14 +210,12 @@ const Header = () => {
                           icon={<ShoppingCartOutlined />}
                         />
                       </Badge>
-                      <p>Giỏ hàng</p>
                     </Link>
                   </Popover>
                 </Col>
                 <Col
                   xs={{
                     span: 12,
-                    offset: 4,
                   }}
                 >
                   {renderUserHeader(data?.fullName)}
